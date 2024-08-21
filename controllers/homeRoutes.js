@@ -1,31 +1,71 @@
-const router = require('./router').Router;
-const{ User } = require('../models');
+const router = require('express').Router();
+const { User } = require('../models/userIndex');
 const withAuth = require('../utils/auth');
 
-// User registration route
-router.get('/, withAuth', async (req, res) => {
-    try{
-        const userData = await User.findAll({
-        attributes: { exclude: ['password'] },
-        order: [['username', 'ASC']]    
-    });
-    const users = userData.map((project) => project.get({ plain: true }));
-    res.render('homepage',{
-        user,
-        logged_in: req.session.logged_in,
-    });
-    } catch (err){
-        res.status(500).json(err);
-    }
-    });
+//view home page
 
-    router.get('/login', (req, res) => {
-        if(req.session.logged_in){
-            res.redirect('/');
-            return;
-        }
-        res.render('login');
 
-    });
-    
-    
+
+
+// sign up / login page
+
+
+
+
+
+// forums page
+
+
+
+
+
+
+
+
+
+// pinned threads page
+
+
+
+
+
+// user profile page
+
+
+
+
+
+
+
+
+
+
+// top threads page
+
+
+
+
+
+
+
+
+// search bar
+
+
+
+
+
+
+
+
+
+
+// blog posts
+
+
+
+
+
+
+
+module.exports = router;
