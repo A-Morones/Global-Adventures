@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { Thread} = require('../../models/thread');
+const { Thread } = require('../../models/thread');
 
 // forums page
 
