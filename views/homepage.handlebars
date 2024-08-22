@@ -1,12 +1,45 @@
-<div class="container">
-  {{#each users as |user| }}\\
-    <div class="row align-center mb-5">\\
-      <div class="col-md-6">\\
-        <h2>{{{get_emoji}}} {{user.name}}</h2>\\
-      </div>\\
-      <div class="col-md-6">\\
-        <h3><a href="mailto:{{user.email}}">{{user.email}}</a></h3>\\
-      </div>\\
-    </div>\\
-  {{/each}}
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Adventures</title>
+</head>
+<body>
+    <header>
+        <h1>Welcome to our Forum!</h1>
+        <nav>
+            <a href="/controllers/api" class="btn btn-primary">Search</a>
+            <a href="/controllers/api/threadRoutes.js" class="btn btn-primary">Forum</a>
+            {% if user %}
+                <a href="/users/{{user.id}}" class="btn btn-primary">Profile</a>
+                <a href="/users/{{user.id}}/edit" class="btn btn-primary">Edit Profile</a>
+                <a href="/public/js/logout.js" class="btn btn-primary">Logout</a>
+            {% else %}
+                <a href="/signup" class="btn btn-primary">Sign Up</a>
+                <a href="/public/js/login.js" class="btn btn-primary">Login</a>
+            {% endif %}
+        </nav>
+    </header>
+    <main>
+        <section id="latest-threads">
+            <h2>Latest Threads</h2>
+            <div class="row">
+                {% for thread in threads %}
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{{thread.title}}</h5>
+                                <p class="card-text">{{{truncate(thread.content) 100}}</p>
+                                <a href="/thread/{{{thread.id}}" class="btn btn-primary">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2022 Global Adventures. All rights reserved.</p>
+    </footer>
+</body>
