@@ -1,3 +1,3 @@
-const Thread = require('./blog');
+const Thread = require('./thread');
 
 module.exports = { Thread };
