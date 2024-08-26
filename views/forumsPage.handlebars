@@ -8,11 +8,10 @@
 </head>
 <body>
     <header>
-        <h1>Welcome to the Forum</h1>
+        <h1>{{title}}</h1>
         <nav>
             <ul>
                 <li><a href="/">Home</a></li>
-                <li><a href="/threads">Threads</a></li>
                 {{#if user}}
                     <li><a href="/threads/new">Create New Thread</a></li>
                     <li><a href="/users/logout">Logout</a></li>
@@ -25,18 +24,21 @@
     </header>
 
     <main>
-        <h2>Featured Discussions</h2>
-        <!-- Display featured or latest threads -->
-        <section>
-            <p>Welcome to the community! Here are some of the latest discussions:</p>
-            <!-- List of featured threads or discussions -->
-            {{#each threads}}
-                <article>
-                    <h3><a href="/threads/{{this.id}}">{{this.title}}</a></h3>
-                    <p>{{this.preview}}</p>
-                </article>
-            {{/each}}
-        </section>
+        <h2>Forum Threads</h2>
+        
+        {{#if threads.length}}
+            <ul>
+                {{#each threads}}
+                    <li>
+                        <h3><a href="/threads/{{this.id}}">{{this.title}}</a></h3>
+                        <p>{{this.preview}}</p>
+                        <small>Posted by {{this.user.username}} on {{this.createdAt}}</small>
+                    </li>
+                {{/each}}
+            </ul>
+        {{else}}
+            <p>No threads available. <a href="/threads/new">Create a new thread</a></p>
+        {{/if}}
     </main>
 
     <footer>

@@ -1,104 +1,56 @@
-const router = require('express').Router();
-const { Thread} = require('../../models/thread');
+const express = require('express');
+const router = express.Router();
+const { Thread, User, Comment } = require('../models/userIndex'); // Adjust the path to your models
+const withAuth = require('../utils/auth');
 
-// forums page
-
-router.get('/', async (req, res) => {
-  try {
-    const threads = await Thread.findAll({
-      include: [{ model: User, as: 'author' }],
-      order: [['createdAt', 'DESC']],
+// Render form to create a new thread (only for logged-in users)
+router.get('/new', withAuth, (req, res) => {
+    res.render('newThread', {
+        title: 'Create New Thread',
+        user: req.session.user
     });
-    res.render('threads/index', { threads });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Server Error');
-  }
 });
 
-// sort threads by popularity
-router.get('/popular', async (req, res) => {
+// Handle creation of a new thread
+router.post('/new', withAuth, async (req, res) => {
     try {
-      const threads = await Thread.findAll({
-        include: [{ model: User, as: 'author' }],
-        order: [['views', 'DESC']],
-      });
-      res.render('threads/index', { threads });
+        const newThread = await Thread.create({
+            title: req.body.title,
+            body: req.body.body,
+            userId: req.session.user_id
+        });
+        res.redirect(`/threads/${newThread.id}`);
     } catch (err) {
-      console.error(err);
-      res.status(500).send('Server Error');
+        console.error(err);
+        res.status(500).render('newThread', { 
+            title: 'Create New Thread', 
+            message: 'Unable to create thread' 
+        });
     }
-  
 });
 
-// sort threads by recent activity
-
-router.get('/recent', async (req, res) => {
-    try {
-      const threads = await Thread.findAll({
-        include: [{ model: User, as: 'author' }],
-        order: [['createdAt', 'DESC']],
-      });
-      res.render('threads/index', { threads });
-    } catch (err) {
-      console.error(err);
-      res.status(500).send('Server Error');
-    }
-  
-});
-
-
-// sort threads by category
-
-router.get('/category/:category', async (req, res) => {
-    try {
-      const threads = await Thread.findAll({
-        where: { category: req.params.category },
-        include: [{ model: User, as: 'author' }],
-        order: [['createdAt', 'DESC']],
-      });
-      res.render('threads/index', { threads });
-    } catch (err) {
-      console.error(err);
-      res.status(500).send('Server Error');
-    }
-  
-});
-
-// start a thread
-
-router.get('/create', (req, res) => {
-  res.render('threads/create');
-});
-
-// view a thread with its details and comments
-
+// View a specific thread
 router.get('/:id', async (req, res) => {
-  try {
-    const thread = await Thread.findByPk(req.params.id, {
-      include: [
-        { model: User, as: 'author' },
-        { model: Comment, as: 'comments', include: [{ model: User, as: 'author' }] },
-      ],
-    });
-    thread.views++;
-    await thread.save();
-    res.render('threads/show', { thread });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Server Error');
-  }
-});
-
-
-// click on a thread to view details and comments
-router.get('/:id/edit', async (req, res) => {
     try {
-      const thread = await Thread.findByPk(req.params.id);
-      res.render('threads/edit', { thread });
+        const thread = await Thread.findByPk(req.params.id, {
+            include: [
+                { model: User, attributes: ['username'] },
+                { model: Comment, include: [{ model: User, attributes: ['username'] }] }
+            ]
+        });
+
+        if (!thread) {
+            return res.status(404).render('error', { message: 'Thread not found' });
+        }
+
+        res.render('threadDetail', {
+            title: thread.title,
+            thread,
+            user: req.session.user
+        });
     } catch (err) {
-      console.error(err);
-      res.status(500).send('Server Error');
+        console.error(err);
+        res.status(500).render('error', { message: 'Unable to load thread' });
     }
 });
 

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="/public/css/globe.css"> <!-- Add your stylesheet link here -->
+</head>
+<body>
+    <header>
+        <h1>My Forum</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                {{#if user}}
+                    <li><a href="/views/thread.handlebars">Create New Thread</a></li>
+                    <li><a href="/views/login.handlebars">Logout</a></li>
+                {{else}}
+                    <li><a href="/views/login.handlebars">Login</a></li>
+                    <li><a href="/views/login.handlebars">Register</a></li>
+                {{/if}}
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        {{{body}}} <!-- Render content from the specific view -->
+    </main>
+    
+    <footer>
+        <p>&copy; 2024 My Forum</p>
+    </footer>
+</body>
+</html>
