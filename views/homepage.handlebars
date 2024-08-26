@@ -3,44 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{title}}</title>
-    <link rel="stylesheet" href="/styles/main.css"> <!-- Link to your stylesheet -->
+    <title>Global Adventures</title>
 </head>
 <body>
     <header>
-        <h1>Welcome to the Forum</h1>
+        <h1>Welcome to our Forum!</h1>
         <nav>
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/threads">Threads</a></li>
-                {{#if user}}
-                    <li><a href="/threads/new">Create New Thread</a></li>
-                    <li><a href="/users/logout">Logout</a></li>
-                {{else}}
-                    <li><a href="/users/login">Login</a></li>
-                    <li><a href="/users/register">Register</a></li>
-                {{/if}}
-            </ul>
+            <a href="/controllers/api" class="btn btn-primary">Search</a>
+            <a href="/controllers/api/threadRoutes.js" class="btn btn-primary">Forum</a>
+            {% if user %}
+                <a href="/users/{{user.id}}" class="btn btn-primary">Profile</a>
+                <a href="/users/{{user.id}}/edit" class="btn btn-primary">Edit Profile</a>
+                <a href="/public/js/logout.js" class="btn btn-primary">Logout</a>
+            {% else %}
+                <a href="/signup" class="btn btn-primary">Sign Up</a>
+                <a href="/public/js/login.js" class="btn btn-primary">Login</a>
+            {% endif %}
         </nav>
     </header>
-
     <main>
-        <h2>Featured Discussions</h2>
-        <!-- Display featured or latest threads -->
-        <section>
-            <p>Welcome to the community! Here are some of the latest discussions:</p>
-            <!-- List of featured threads or discussions -->
-            {{#each threads}}
-                <article>
-                    <h3><a href="/threads/{{this.id}}">{{this.title}}</a></h3>
-                    <p>{{this.preview}}</p>
-                </article>
-            {{/each}}
+        <section id="latest-threads">
+            <h2>Latest Threads</h2>
+            <div class="row">
+                {% for thread in threads %}
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{{thread.title}}</h5>
+                                <p class="card-text">{{{truncate(thread.content) 100}}</p>
+                                <a href="/thread/{{{thread.id}}" class="btn btn-primary">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
         </section>
     </main>
-
     <footer>
-        <p>&copy; 2024 My Forum</p>
+        <p>&copy; 2022 Global Adventures. All rights reserved.</p>
     </footer>
 </body>
-</html>
