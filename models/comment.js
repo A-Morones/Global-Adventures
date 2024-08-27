@@ -1,12 +1,22 @@
 const { Model, DataTypes } = require('sequelize');
-const sequelize = require('./config/connection');
+const sequelize = require('../config/connection');
 const bcrypt = require('bcrypt');
 
 class Comment extends Model {
     static associate(models) {
-        User.hasMany(models.Blog, {
+        User.hasMany(models.Comment, {
             foreignKey: 'user_id',
             onDelete: 'CASCADE',
+        });
+        Thread.hasMany(models.Comment, {
+            foreignKey: 'thread_id',
+            onDelete: 'CASCADE',
+        });
+        Comment.belongsTo(models.User, {
+            foreignKey: 'user_id',
+        });
+        Comment.belongsTo(models.Thread, {
+            foreignKey: 'thread_id',
         });
     }
     validatePassword(password) {
@@ -16,33 +26,12 @@ class Comment extends Model {
         return bcrypt.hashSync(password, 10);
     }
     toJSON() {
-        const { id, username, email } = this;
-        return { id, username, email };
-    }
-    static async findOrCreateWithUsernameAndEmail(username, email, password) {
-        const hashedPassword = await User.hashPassword(password);
-        const [user, created] = await User.findOrCreate({
-            where: { username, email },
-            defaults: { password: hashedPassword },
-        });
-        return user;
-    }
-    static async authenticate(username, password) {
-        const user = await User.findOne({ where: { username } });
-        if (!user || !user.validatePassword(password)) {
-            throw new Error('Invalid username or password');
-        }
-        return user;
-    }
-    static async getTopUsers(limit = 10) {
-        return User.findAll({
-            order: [['blogs_count', 'DESC']],
-            limit,
-            attributes: ['id', 'username', 'blogs_count'],
-        });
+        const { id, content, createdAt, updatedAt, user_id } = this.get();
+        return { id, content, createdAt, updatedAt, userId: user_id };
     }
 }
 
+    
 Comment.init(
     {
         id: {
@@ -62,13 +51,18 @@ Comment.init(
             },
             allowNull: false,
         },
-        blog_id: {
-            type: DataTypes.INTEGER,
-            references: {
-                model: 'blogs',
-                key: 'id',
+    },
+    {
+        sequelize,
+        timestamps: true,
+        tableName: 'comments',
+        paranoid: true,
+        hooks: {
+            beforeCreate: async (comment) => {
+                if (!comment.user_id) {
+                    throw new Error('User ID is required');
+                }
             },
-            allowNull: false,
         },
     }
 );

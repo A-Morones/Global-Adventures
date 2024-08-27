@@ -1,0 +1,21 @@
+<main>
+        <h2>Create a New Thread</h2>
+
+        {{#if message}}
+            <p class="error">{{message}}</p>
+        {{/if}}
+
+        <form action="/threads/new" method="POST">
+            <div>
+                <label for="title">Thread Title:</label>
+                <input type="text" id="title" name="title" required>
+            </div>
+            <div>
+                <label for="body">Thread Content:</label>
+                <textarea id="body" name="body" rows="10" required></textarea>
+            </div>
+            <div>
+                <button type="submit">Create Thread</button>
+            </div>
+        </form>
+    </main>
