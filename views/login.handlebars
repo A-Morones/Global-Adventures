@@ -1,14 +1,11 @@
-
 <form action="/login" method="POST">
-    <div class="mb-3">
-        <label for="username" class="form-label">Username</label>
-        <input type="text" class="form-control" id="username" name="username" required>
+    <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
     </div>
-    <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <input type="password" class="form-control" id="password" name="password" required>
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
     </div>
-    <button type="submit" class="btn btn-primary">Login</button>
+    <button type="submit">Login</button>
 </form>
-
-<script src="/public/js/login.js"></script>

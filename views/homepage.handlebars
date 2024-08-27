@@ -1,41 +1,60 @@
-   <main class="container mt-5">
-        <!-- Carousel for Traveling Pictures -->
-        <div id="travelCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img src="/public/images/edgar-chaparro-6ccJQ5qPFvY-unsplash.jpg" class="d-block w-100" alt="Travel Image 1">
-                </div>
-                <div class="carousel-item">
-                    <img src="/public/images/eric-marty-IZunjrb3soo-unsplash.jpg" class="d-block w-100" alt="Travel Image 2">
-                </div>
-                <div class="carousel-item">
-                    <img src="/public/images/fabio-comparelli-uq2E2V4LhCY-unsplash.jpg" class="d-block w-100" alt="Travel Image 3">
-                </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#travelCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#travelCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
-        </div>
-
-        <!-- Top Travel Discussions -->
-        <h2 class="mb-4">Top Travel Discussions</h2>
+ <main class="container mt-4">
         <div class="row">
-            {{#each threads}}
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="/images/{{this.image}}" class="card-img-top" alt="Travel Image">
+            <!-- Recent Threads Section -->
+            <div class="col-md-8">
+                <h2>Recent Threads</h2>
+                {{#if threads.length}}
+                <ul class="list-group">
+                    {{#each threads}}
+                    <li class="list-group-item">
+                        <h4><a href="/threads/{{this.id}}">{{this.title}}</a></h4>
+                        <p>{{this.preview}}</p>
+                        <small>Posted by {{this.user.username}} on {{this.createdAt}}</small>
+                    </li>
+                    {{/each}}
+                </ul>
+                {{else}}
+                <p>No threads available. <a href="/new">Create a new thread</a></p>
+                {{/if}}
+            </div>
+
+            <!-- Sidebar Section -->
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h3>Featured Discussion</h3>
+                    </div>
                     <div class="card-body">
-                        <h5 class="card-title">{{this.title}}</h5>
-                        <p class="card-text">{{this.preview}}</p>
-                        <a href="/threads/{{this.id}}" class="btn btn-primary">Read More</a>
+                        <!-- Example featured thread -->
+                        <h4><a href="/threads/{{featuredThread.id}}">{{featuredThread.title}}</a></h4>
+                        <p>{{featuredThread.preview}}</p>
+                        <small>Posted by {{featuredThread.user.username}} on {{featuredThread.createdAt}}</small>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h3>Categories</h3>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        {{#each categories}}
+                        <li class="list-group-item">
+                            <a href="/categories/{{this.id}}">{{this.name}}</a>
+                        </li>
+                        {{/each}}
+                    </ul>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h3>User Statistics</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Total Users: {{userStats.totalUsers}}</p>
+                        <p>Total Threads: {{userStats.totalThreads}}</p>
+                        <p>Total Comments: {{userStats.totalComments}}</p>
                     </div>
                 </div>
             </div>
-            {{/each}}
         </div>
     </main>

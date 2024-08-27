@@ -11,7 +11,7 @@ router.get('/new', withAuth, (req, res) => {
     });
 });
 // Handle creation of a new thread
-router.post('/new', withAuth, async (req, res) => {
+router.post('/new/:id', withAuth, async (req, res) => {
     try {
         const newThread = await Thread.create({
             title: req.body.title,
@@ -22,7 +22,7 @@ router.post('/new', withAuth, async (req, res) => {
         res.redirect(`/threads/${newThread.id}`); // Redirect to the new thread page
     } catch (err) {
         console.error(err);
-        res.status(500).render('newThread', { 
+        res.status(500).render('threadDetail', { 
             title: 'Create New Thread', 
             message: 'Unable to create thread' 
         });

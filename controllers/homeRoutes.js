@@ -2,15 +2,16 @@ const express = require('express');
 const router = express.Router();
 const { Thread, User, Comment } = require('../models/Index'); // Adjust the path to your models
 
+const withAuth = require('../utils/auth'); // middleware to check if user is logged in
+
 // Render form to create a new thread (only for logged-in users)
 
-router.get('/new', (req, res) => {
+router.get('/new', withAuth, (req, res) => {
     res.render('newThread', {
         title: 'Create New Thread',
         user: req.session.user_id? req.session.user : null
     });
 });
-
 // Render the homepage with a list of threads
 router.get('/', async (req, res) => {
     try{
@@ -19,7 +20,7 @@ router.get('/', async (req, res) => {
             order: [['createdAt', 'DESC']]
         });
         res.render('homepage', {
-            title: 'Forum Home',
+            title: 'Global Adventures',
             user: req.session.user_id? req.session.user : null,
             threads
         });

@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { User } = require('../../models/Index');
-const withAuth = require('../../utils/auth');
+const bcrypt = require('bcrypt');
 
 
 
@@ -49,13 +49,6 @@ router.post('/register', async (req, res) => {
 });
 
 // Route to render the login page
-router.get('/login', (req, res) => {
-    if (req.session.logged_in) {
-        res.redirect('/');
-        return;
-    }
-    res.render('login', { title: 'Login' });
-});
 
 // Route to handle login form submission
 router.post('/login', async (req, res) => {
