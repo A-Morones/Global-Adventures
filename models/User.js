@@ -1,54 +1,46 @@
 const { Model, DataTypes } = require('sequelize');
-const bcrypt = require('bcrypt');
 const sequelize = require('../config/connection');
 
-class User extends Model {
-  checkPassword(loginPw) {
-    return bcrypt.compareSync(loginPw, this.password);
-  }
-}
+class User extends Model {}
 
 User.init(
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true,
-      autoIncrement: true,
+    {
+        id: {
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
+            primaryKey: true,
+        },
+        username: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        email: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        password: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
     },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-      validate: {
-        isEmail: true,
-      },
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        len: [8],
-      },
-    },
-  },
-  {
-    hooks: {
-      beforeCreate: async (newUserData) => {
-        newUserData.password = await bcrypt.hash(newUserData.password, 10);
-        return newUserData;
-      },
-    },
-    sequelize,
-    timestamps: false,
-    freezeTableName: true,
-    underscored: true,
-    modelName: 'users',
-  }
+    {
+        sequelize,
+        modelName: 'user',
+        freezeTableName: true,
+        underscored: true,
+    }
 );
+
+// Associations
+User.associate = (models) => {
+    User.hasMany(models.Thread, {
+        foreignKey: 'userId',
+        onDelete: 'CASCADE',
+    });
+    User.hasMany(models.Comment, {
+        foreignKey: 'userId',
+        onDelete: 'CASCADE',
+    });
+};
 
 module.exports = User;

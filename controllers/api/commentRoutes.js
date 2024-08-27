@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Comment, User, Thread } = require('../../models/userIndex'); // Adjust path as needed
+const { Comment, User, Thread } = require('../../models/Index'); // Adjust path as needed
 const withAuth = require('../../utils/auth');
 
 // Create a new comment
