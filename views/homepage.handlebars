@@ -1,46 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{title}}</title>
-    <link rel="stylesheet" href="/public/css/globe.css"> <!-- Link to your stylesheet -->
-</head>
-<body>
-    <header>
-        <h1>Welcome to Global Adventures</h1>
-        <nav>
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/threads">Threads</a></li>
-                {{#if user}}
-                    <li><a href="/threads/new">Create New Thread</a></li>
-                    <li><a href="/logout">Logout</a></li>
-                {{else}}
-                    <li><a href="/login">Login</a></li>
-                    <li><a href="/register">Register</a></li>
-                {{/if}}
-            </ul>
-        </nav>
-    </header>
+   <main class="container mt-5">
+        <!-- Carousel for Traveling Pictures -->
+        <div id="travelCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="/public/images/edgar-chaparro-6ccJQ5qPFvY-unsplash.jpg" class="d-block w-100" alt="Travel Image 1">
+                </div>
+                <div class="carousel-item">
+                    <img src="/public/images/eric-marty-IZunjrb3soo-unsplash.jpg" class="d-block w-100" alt="Travel Image 2">
+                </div>
+                <div class="carousel-item">
+                    <img src="/public/images/fabio-comparelli-uq2E2V4LhCY-unsplash.jpg" class="d-block w-100" alt="Travel Image 3">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#travelCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#travelCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
 
-    <main>
-        <h2>Featured Discussions</h2>
-        <!-- Display featured or latest threads -->
-        <section>
-            <p>Welcome to the community! Here are some of the latest discussions:</p>
-            <!-- List of featured threads or discussions -->
+        <!-- Top Travel Discussions -->
+        <h2 class="mb-4">Top Travel Discussions</h2>
+        <div class="row">
             {{#each threads}}
-                <article>
-                    <h3><a href="/threads/{{this.id}}">{{this.title}}</a></h3>
-                    <p>{{this.preview}}</p>
-                </article>
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="/images/{{this.image}}" class="card-img-top" alt="Travel Image">
+                    <div class="card-body">
+                        <h5 class="card-title">{{this.title}}</h5>
+                        <p class="card-text">{{this.preview}}</p>
+                        <a href="/threads/{{this.id}}" class="btn btn-primary">Read More</a>
+                    </div>
+                </div>
+            </div>
             {{/each}}
-        </section>
+        </div>
     </main>
-
-    <footer>
-        <p>&copy; 2024 My Forum</p>
-    </footer>
-</body>
-</html>

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Thread, User } = require('../models/userIndex'); // Adjust the path to your models
+const { Thread, User, Comment } = require('../models/Index'); // Adjust the path to your models
 
 // Render form to create a new thread (only for logged-in users)
 
@@ -53,7 +53,7 @@ router.get('/threads', async (req, res) => {
 
 router.get('/login', (req, res) => {
     if (req.session.user_id) {
-        res.redirect('/');
+        res.redirect('homepage');
         return;
     } 
     res.render('login')
@@ -64,7 +64,7 @@ router.get('/login', (req, res) => {
 
 router.get('/register', (req, res) => {
     if (req.session.user_id) {
-        res.redirect('/');
+        res.redirect('homepage');
         return;
     } 
     res.render('register')

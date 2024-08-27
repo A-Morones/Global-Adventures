@@ -1,67 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{title}}</title>
-    <link rel="stylesheet" href="/styles/main.css"> <!-- Link to your stylesheet -->
-</head>
-<body>
-    <header>
-        <h1>{{title}}</h1>
-        <nav>
+
+    
+      <main>
+        <h2>{{thread.title}}</h2>
+        <p>{{thread.body}}</p>
+        <small>Posted by {{thread.user.username}} on {{thread.createdAt}}</small>
+
+        <hr>
+
+        <h3>Comments</h3>
+        {{#if thread.comments.length}}
             <ul>
-                <li><a href="/">Home</a></li>
-                {{#if user}}
-                    <li><a href="/threads/new">Create New Thread</a></li>
-                    <li><a href="/logout">Logout</a></li>
-                {{else}}
-                    <li><a href="/login">Login</a></li>
-                    <li><a href="/register">Register</a></li>
-                {{/if}}
+                {{#each thread.comments}}
+                    <li>
+                        <p>{{this.body}}</p>
+                        <small>Posted by {{this.user.username}} on {{this.createdAt}}</small>
+                    </li>
+                {{/each}}
             </ul>
-        </nav>
-    </header>
-
-    <main>
-        <article>
-            <h2>{{thread.title}}</h2>
-            <p>{{thread.body}}</p>
-            <small>Posted by {{thread.user.username}} on {{thread.createdAt}}</small>
-        </article>
-
-        <section>
-            <h3>Comments</h3>
-
-            {{#if thread.comments.length}}
-                <ul>
-                    {{#each thread.comments}}
-                        <li>
-                            <p>{{this.body}}</p>
-                            <small>Comment by {{this.user.username}} on {{this.createdAt}}</small>
-                        </li>
-                    {{/each}}
-                </ul>
-            {{else}}
-                <p>No comments yet. Be the first to comment!</p>
-            {{/if}}
-        </section>
+        {{else}}
+            <p>No comments yet.</p>
+        {{/if}}
 
         {{#if user}}
-            <section>
-                <h3>Leave a Comment</h3>
-                <form action="/threads/{{thread.id}}/comments" method="POST">
-                    <textarea name="body" rows="5" required></textarea>
-                    <button type="submit">Post Comment</button>
-                </form>
-            </section>
+            <form action="/comments" method="POST">
+                <textarea name="body" placeholder="Add a comment"></textarea>
+                <input type="hidden" name="threadId" value="{{thread.id}}">
+                <button type="submit">Post Comment</button>
+            </form>
         {{else}}
-            <p><a href="/login">Log in</a> to post a comment.</p>
+            <p><a href="/login">Login</a> to post a comment.</p>
         {{/if}}
     </main>
-
-    <footer>
-        <p>&copy; 2024 My Forum</p>
-    </footer>
-</body>
-</html>

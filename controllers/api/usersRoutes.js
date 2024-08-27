@@ -1,72 +1,109 @@
 const router = require('express').Router();
-const { User } = require('../../models/userIndex');
+const { User } = require('../../models/Index');
 const withAuth = require('../../utils/auth');
-const bcrypt = require('bcrypt');
 
-router.post('/login', async (req, res) => {
-  try {
-    const userData = await User.findOne({ where: { email: req.body.email } });
 
-    if (!userData) {
-      res
-        .status(400)
-        .json({ message: 'Incorrect email or password, please try again' });
-      return;
+
+
+// Route to render the registration page
+router.get('/register', (req, res) => {
+    if (req.session.logged_in) {
+        res.redirect('/');
+        return;
     }
-
-    const validPassword = await userData.checkPassword(req.body.password);
-
-    if (!validPassword) {
-      res
-        .status(400)
-        .json({ message: 'Incorrect email or password, please try again' });
-      return;
-    }
-
-    req.session.save(() => {
-      req.session.user_id = userData.id;
-      req.session.logged_in = true;
-      
-      res.json({ user: userData, message: 'You are now logged in!' });
-    });
-
-  } catch (err) {
-    res.status(400).json(err);
-  }
+    res.render('register', { title: 'Register' });
 });
-
-router.post('/logout', (req, res) => {
-  if (req.session.logged_in) {
-    req.session.destroy(() => {
-      res.status(204).end();
-    });
-  } else {
-    res.status(404).end();
-  }
-});
-
+// Route to handle registration form submission
 router.post('/register', async (req, res) => {
-  try {
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    const newUser = await User.create({
-      username: req.body.username,
-      email: req.body.email,
-      password: hashedPassword
-    });
-    req.session.save(() => {
-      req.session.user_id = newUser.id;
-      req.session.logged_in = true;
-      
-      res.json({ user: newUser, message: 'User registration successful!' });
-    
-      });
-  } catch (err) {
-    if (err.name === 'SequelizeUniqueConstraintError') {
-      res.status(400).json({ message: 'Email already in use' });
-    } else {
-      res.status(400).json(err);
+    try {
+        const { name, email, password } = req.body;
+
+        // Validate input
+        if (!name || !email || !password) {
+            return res.status(400).json({ error: 'All fields are required' });
+        }
+
+        // Check if email already exists
+        const existingUser = await User.findOne({ where: { email } });
+        if (existingUser) {
+            return res.status(400).json({ error: 'Email already in use' });
+        }
+
+        // Create new user
+        const newUser = await User.create({ name, email, password });
+
+        // Save session and redirect
+        req.session.save(() => {
+            req.session.user_id = newUser.id;
+            req.session.logged_in = true;
+
+            res.redirect('/');  // Change to your actual homepage route
+        });
+    } catch (err) {
+        res
+        console.error(err);
+        res.status(500).json({ error: 'An error occurred during registration' });
+        res.render('homepage')
+
     }
-  }
+});
+
+// Route to render the login page
+router.get('/login', (req, res) => {
+    if (req.session.logged_in) {
+        res.redirect('/');
+        return;
+    }
+    res.render('login', { title: 'Login' });
+});
+
+// Route to handle login form submission
+router.post('/login', async (req, res) => {
+    try {
+        const userData = await User.findOne({ where: { email: req.body.email } });
+
+        if (!userData) {
+            res.status(400).json({ message: 'Incorrect email or password, please try again' });
+            return;
+        }
+
+        const validPassword = userData.checkPassword(req.body.password);
+
+        if (!validPassword) {
+            res.status(400).json({ message: 'Incorrect email or password, please try again' });
+            return;
+        }
+
+        req.session.save(() => {
+            req.session.user_id = userData.id;
+            req.session.logged_in = true;
+
+            res.redirect('/'); // Ensure this route matches your homepage
+        });
+
+    } catch (err) {
+        console.error(err);
+        res.status(400).json({ message: 'An error occurred during login' });
+    }
+});
+
+router.post('/login', (req, res) => {
+    res.json({ message: 'Logged out!' });
+    req.session.destroy(() => {
+        res.redirect('/login');
+    });
+    // res.json({ message: 'Logged out!' });
+})
+
+// Route to handle logout
+router.post('/logout', (req, res) => {
+    if (req.session.logged_in) {
+        req.session.destroy(() => {
+            res.status(204).end();
+        });
+    } else {
+        res.status(404).end();
+    }
 });
 
 module.exports = router;

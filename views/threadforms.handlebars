@@ -1,21 +1,19 @@
-<main>
-        <h2>Create a New Thread</h2>
+{{!-- newThread.handlebars --}}
+{{#extends 'main'}}
 
-        {{#if message}}
-            <p class="error">{{message}}</p>
-        {{/if}}
-
-        <form action="/threads/new" method="POST">
-            <div>
-                <label for="title">Thread Title:</label>
-                <input type="text" id="title" name="title" required>
-            </div>
-            <div>
-                <label for="body">Thread Content:</label>
-                <textarea id="body" name="body" rows="10" required></textarea>
-            </div>
-            <div>
-                <button type="submit">Create Thread</button>
-            </div>
-        </form>
-    </main>
+{{#block 'body'}}
+<div class="container">
+    <h2>Create a New Thread</h2>
+    <form action="/threads/new" method="POST">
+        <div class="form-group">
+            <label for="title">Thread Title</label>
+            <input type="text" class="form-control" id="title" name="title" placeholder="Enter thread title" required>
+        </div>
+        <div class="form-group">
+            <label for="body">Thread Content</label>
+            <textarea class="form-control" id="body" name="body" rows="5" placeholder="Enter your content" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Create Thread</button>
+    </form>
+</div>
+{{/block}}

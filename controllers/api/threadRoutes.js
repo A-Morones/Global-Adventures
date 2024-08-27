@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { Thread, User, Comment } = require('../../models/userIndex'); // Adjust the path to your models
+const { Thread} = require('../../models/Index'); 
 const withAuth = require('../../utils/auth');
 // render the the thread creation form
 
 router.get('/new', withAuth, (req, res) => {
-    res.render('threadforms', {
+    res.render('threadfroms', {
         title: 'Create New Thread',
         user: req.session.user
     });
@@ -16,9 +16,10 @@ router.post('/new', withAuth, async (req, res) => {
         const newThread = await Thread.create({
             title: req.body.title,
             body: req.body.body,
-            userId: req.session.user_id
+            userId: req.session.user_id 
         });
-        res.redirect(`/threads/${newThread.id}`);
+
+        res.redirect(`/threads/${newThread.id}`); // Redirect to the new thread page
     } catch (err) {
         console.error(err);
         res.status(500).render('newThread', { 
@@ -27,30 +28,5 @@ router.post('/new', withAuth, async (req, res) => {
         });
     }
 });
-router.get('/:id', async (req, res) => {
-    try {
-        const thread = await Thread.findByPk(req.params.id, {
-            include: [
-                { model: User, attributes: ['username'] },
-                { 
-                    model: Comment, 
-                    include: [{ model: User, attributes: ['username'] }] 
-                }
-            ]
-        });
 
-        if (!thread) {
-            return res.status(404).render('error', { message: 'Thread not found' });
-        }
-
-        res.render('threadDetail', {
-            title: thread.title,
-            thread,
-            user: req.session.user
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).render('error', { message: 'Unable to load thread' });
-    }
-});
 module.exports = router;
