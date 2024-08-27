@@ -1,6 +1,6 @@
 const User = require('./User');
-const Thread = require('./Thread');
-const Comment = require('./Comment');
+const Thread = require('./thread');
+const Comment = require('./comment');
 
 User.associate({ Thread, Comment });
 Thread.associate({ User });
