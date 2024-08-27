@@ -1,42 +1,33 @@
+// models/Thread.js
 const { Model, DataTypes } = require('sequelize');
-const bcrypt = require('bcrypt');
-const sequelize = require('../config/connection');
+const sequelize = require('../config/connection'); // Adjust the path to your connection file
 
-class Thread extends Model {}
-
-Thread.init(
-    {
-      id: {
+const Thread = sequelize.define('Thread', {
+    id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
         primaryKey: true,
         autoIncrement: true,
-      },
-      title: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      content: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-      },
-      author: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      created_at: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
-      },
+        allowNull: false
     },
-    {
-      sequelize,
-      modelName: 'Thread',
-      tableName: 'threads',
-      timestamps: true,
+    title: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    body: {
+        type: DataTypes.TEXT,
+        allowNull: false
+    },
+    userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'User', // 'Users' refers to the table name
+            key: 'id'
+        }
     }
-  );
-    
-
+}, {
+    timestamps: true, // Automatically adds 'createdAt' and 'updatedAt' fields
+    tableName: 'threads' // You can specify the table name explicitly if needed
+});
 
 module.exports = Thread;
