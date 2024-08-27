@@ -1,5 +1,7 @@
 const router = require('express').Router();
 const { User } = require('../../models/userIndex');
+const withAuth = require('../../utils/auth');
+const bcrypt = require('bcrypt');
 
 router.post('/login', async (req, res) => {
   try {
@@ -40,6 +42,30 @@ router.post('/logout', (req, res) => {
     });
   } else {
     res.status(404).end();
+  }
+});
+
+router.post('/register', async (req, res) => {
+  try {
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    const newUser = await User.create({
+      username: req.body.username,
+      email: req.body.email,
+      password: hashedPassword
+    });
+    req.session.save(() => {
+      req.session.user_id = newUser.id;
+      req.session.logged_in = true;
+      
+      res.json({ user: newUser, message: 'User registration successful!' });
+    
+      });
+  } catch (err) {
+    if (err.name === 'SequelizeUniqueConstraintError') {
+      res.status(400).json({ message: 'Email already in use' });
+    } else {
+      res.status(400).json(err);
+    }
   }
 });
 

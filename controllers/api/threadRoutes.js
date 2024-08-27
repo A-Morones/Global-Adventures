@@ -1,16 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const { Thread, User, Comment } = require('../models/userIndex'); // Adjust the path to your models
-const withAuth = require('../utils/auth');
+const { Thread, User, Comment } = require('../../models/userIndex'); // Adjust the path to your models
+const withAuth = require('../../utils/auth');
+// render the the thread creation form
 
-// Render form to create a new thread (only for logged-in users)
 router.get('/new', withAuth, (req, res) => {
-    res.render('newThread', {
+    res.render('threadforms', {
         title: 'Create New Thread',
         user: req.session.user
     });
 });
-
 // Handle creation of a new thread
 router.post('/new', withAuth, async (req, res) => {
     try {
@@ -28,14 +27,15 @@ router.post('/new', withAuth, async (req, res) => {
         });
     }
 });
-
-// View a specific thread
 router.get('/:id', async (req, res) => {
     try {
         const thread = await Thread.findByPk(req.params.id, {
             include: [
                 { model: User, attributes: ['username'] },
-                { model: Comment, include: [{ model: User, attributes: ['username'] }] }
+                { 
+                    model: Comment, 
+                    include: [{ model: User, attributes: ['username'] }] 
+                }
             ]
         });
 
@@ -53,5 +53,4 @@ router.get('/:id', async (req, res) => {
         res.status(500).render('error', { message: 'Unable to load thread' });
     }
 });
-
 module.exports = router;
