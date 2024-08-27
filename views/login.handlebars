@@ -1,15 +1,18 @@
-<h1>Register</h1>
 
-{{#if errors}}
-  {{#each errors}}
-    <div>{{this.msg}}</div>
-  {{/each}}
-{{/if}}
+<h2>Login</h2>
 
-<form action="/users/register" method="POST">
-  <input type="text" name="username" placeholder="Username" value="{{username}}">
-  <input type="email" name="email" placeholder="Email" value="{{email}}">
-  <input type="password" name="password" placeholder="Password">
-  <input type="password" name="password2" placeholder="Confirm Password">
-  <button type="submit">Register</button>
+<form class="form login-form">
+  <div class="form-group">
+    <label for="email-login">email:</label>
+    <input class="form-input" type="text" id="email-login" />
+  </div>
+  <div class="form-group">
+    <label for="password-login">password:</label>
+    <input class="form-input" type="password" id="password-login" />
+  </div>
+  <div class="form-group">
+    <button class="btn btn-primary" type="submit">login</button>
+  </div>
 </form>
+
+<script src="/js/login.js"></script>
