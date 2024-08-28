@@ -25,7 +25,7 @@ Then I should be redirected to a page displaying the full content of the blog po
 
 Github Repository link: https://github.com/A-Morones/Global-Adventures
 
-Webpage link: TBD
+Webpage link: (https://global-adventures-2pnf.onrender.com)
 
 ## Preview
 
@@ -36,6 +36,10 @@ Nicholaus Hamilton
 
 Adalberto Morones
 
+Bootstrap
+
 mdn web docs
 
 W3Schools
+
+Neil Hernandez, helped with partial code recommendation.
