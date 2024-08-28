@@ -43,7 +43,7 @@ router.post('/register', async (req, res) => {
         res
         console.error(err);
         res.status(500).json({ error: 'An error occurred during registration' });
-        res.render('homepage')
+        res.render('login')
 
     }
 });
